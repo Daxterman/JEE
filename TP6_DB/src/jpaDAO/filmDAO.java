@@ -12,115 +12,105 @@ import jcbcPack.film;
 
 public class filmDAO {
 	
-	EntityManagerFactory emf = Persistence.createEntityManagerFactory("FilmDB");
-	EntityManager entityManager = emf.createEntityManager();
+	EntityManagerFactory emf;
 	
-	//CrÃ©ation d'une transaction (lorsqu'on modifie la base)
-	EntityTransaction transaction = entityManager.getTransaction();
 	
 	public filmDAO()
 	{
-		
+		emf = Persistence.createEntityManagerFactory("FilmDB");
 	}
 	
-	/*@Override
-	public void nationsAvecPlus(int nb) {
-		
-		try {
-			TypedQuery<Nation> query = entityManager.createQuery("SELECT n FROM Nation n WHERE n.population >= :population", Nation.class);
-		    query.setParameter("population", nb);
-		    List<Nation> nations = query.getResultList();
-		    if (nations != null) {
-		    	System.out.println("--------------------------------------");
-		    	for(Nation n : nations)
-				{
-					System.out.println(n.toString());
-				}
-	        }
-		}
-		catch(Exception e)
-		{
-			
-		}
-		
-	}
-
-	@Override
-	public void modifNBHab(Nation n, int nb) {
-		// TODO Auto-generated method stub
-		
-		try {
-			//Modification de la population de l'Espagne
-			transaction.begin();
-			
-			TypedQuery<Nation> query = entityManager.createQuery("SELECT n FROM Nation n WHERE n.nom = :nom", Nation.class);
-		    query.setParameter("nom", n.getNom());
-		    Nation nationAModifier = query.getSingleResult();
-		    if (nationAModifier != null) {
-	            nationAModifier.setPopulation(nb);
-	        }
-
-	        transaction.commit();
-		}
-		catch(Exception e)
-		{
-			transaction.rollback();
-		}
-		
-	}*/
-	
-	public void AfficherFilms()
-	{
-		 Query q = entityManager.createQuery( "from film" , film.class );
-		 List<film> films ;
-			
-		 films = q.getResultList();
-		 for (film f : films) {
-		 System.out.println( f.toString() );
-		 }
-	}
-	
-	
-	/*public Nation trouverNation(String nomNation)
-	{
-		try {
-    		TypedQuery<Nation> nationQuery = entityManager.createQuery("SELECT n FROM Nation n WHERE n.nom = :nom", Nation.class);
-        	nationQuery.setParameter("nom", nomNation);
-        	Nation nation = nationQuery.getSingleResult();
-        	
-        	return nation;
-    	}
-    	catch(Exception e)
-    	{
-    		return null;
-    	}
-	}
-	
-	public void creerCitoyen(String nom, String prenom, Nation nation)
-	{
-		transaction.begin();
-		
-		Citoyen cit = new Citoyen();
-		cit.setNom(nom);
-		cit.setPrenom(prenom);
-		cit.setNation(nation);
-		
-		entityManager.persist(cit);
-		
-		transaction.commit();
-    	
-	}
-	public void getCitoyensParNation(String nomNation) {
-        TypedQuery<Citoyen> query = entityManager.createQuery("SELECT c FROM Citoyen c WHERE c.nation.nom = :nomNation", Citoyen.class);
-        query.setParameter("nomNation", nomNation);
-        List<Citoyen> citoyens = query.getResultList();
-        if (citoyens != null) {
-	    	System.out.println("--------------------------------------");
-	    	for(Citoyen c : citoyens)
-			{
-				System.out.println(c.toString());
-			}
+	public void AfficherFilms() {
+        EntityManager entityManager = emf.createEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+        
+        try {
+            transaction.begin();
+            Query q = entityManager.createQuery("FROM film", film.class);
+            List<film> films = q.getResultList();
+            for (film f : films) {
+                System.out.println(f.toString());
+            }
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            entityManager.close();
         }
-    }*/
+    }
+
+    public void creerFilm(String titre, int anneeSortie, String nomGenre, String nomReal) {
+        EntityManager entityManager = emf.createEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+
+        try {
+            transaction.begin();
+            film f = new film();
+            f.setTitre(titre);
+            f.setAnnee_sortie(anneeSortie);
+            f.setNom_genre(nomGenre);
+            f.setNom_real(nomReal);
+            entityManager.persist(f);
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            entityManager.close();
+        }
+    }
+    
+    public void supprimerFilmParNom(String titre) {
+        EntityManager entityManager = emf.createEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+
+        try {
+            transaction.begin();
+            Query query = entityManager.createQuery("DELETE FROM film f WHERE f.titre = :titre");
+            query.setParameter("titre", titre);
+            query.executeUpdate();
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            entityManager.close();
+        }
+    }
+    
+    public void modifierFilmParId(int id, String nouveauTitre, int nouvelleAnneeSortie, String nouveauNomGenre, String nouveauNomReal) {
+        EntityManager entityManager = emf.createEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+
+        try {
+            transaction.begin();
+            film f = entityManager.find(film.class, id);
+            if (f != null) {
+                f.setTitre(nouveauTitre);
+                f.setAnnee_sortie(nouvelleAnneeSortie);
+                f.setNom_genre(nouveauNomGenre);
+                f.setNom_real(nouveauNomReal);
+                entityManager.merge(f);
+                transaction.commit();
+                //System.out.println("Film modifié avec succès.");
+            } else {
+                //System.out.println("Aucun film trouvé avec l'ID spécifié.");
+            }
+        } catch (Exception e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            entityManager.close();
+        }
+    }
 
 }
