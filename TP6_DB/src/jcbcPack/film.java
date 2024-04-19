@@ -14,15 +14,15 @@ public class film {
 	private int id_film;
 	private String titre;
 	private int annee_sortie;
-	private String nom_genre;
-	private String nom_real;
+	private int id_genre;
+	private int id_real;
 	
     @ManyToOne
-    @JoinColumn(name = "nom_genre" , insertable = false, updatable = false)
+    @JoinColumn(name = "id_genre" , insertable = false, updatable = false)
     private genre genre;
 
     @ManyToOne
-    @JoinColumn(name = "nom_real" , insertable = false, updatable = false)
+    @JoinColumn(name = "id_real" , insertable = false, updatable = false)
     private realisateur real;
 	
 	
@@ -67,26 +67,26 @@ public class film {
 
 
 
-	public String getNom_genre() {
-		return nom_genre;
+	public int getId_genre() {
+		return id_genre;
 	}
 
 
 
-	public void setNom_genre(String nom_genre) {
-		this.nom_genre = nom_genre;
+	public void setId_genre(int id_genre) {
+		this.id_genre = id_genre;
 	}
 
 
 
-	public String getNom_real() {
-		return nom_real;
+	public int getId_real() {
+		return id_real;
 	}
 
 
 
-	public void setNom_real(String nom_real) {
-		this.nom_real = nom_real;
+	public void setId_real(int id_real) {
+		this.id_real = id_real;
 	}
 	
 	@Override

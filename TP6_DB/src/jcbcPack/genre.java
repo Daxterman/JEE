@@ -9,11 +9,22 @@ import javax.persistence.Table;
 public class genre {
 	
 	@Id
+	private int id_genre;
 	private String nom_genre;
 	
 	public genre()
 	{
 		
+	}
+	
+	public int getId_genre()
+	{
+		return id_genre;
+	}
+	
+	public void setId_genre(int id)
+	{
+		this.id_genre =id;
 	}
 	
 	public String getnom_genre()
@@ -28,9 +39,7 @@ public class genre {
 	
 	@Override
 	public String toString() {
-	    return "Genre{" +
-	           "nomGenre='" + nom_genre + '\'' +
-	           '}';
+	    return "nomGenre='" + nom_genre + '\'';
 	}
 	
 }

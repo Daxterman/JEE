@@ -8,10 +8,21 @@ import javax.persistence.Table;
 @Table(name="realisateur")
 public class realisateur {
     @Id
+    private int id_real;
     private String nom_real;
     private String prenom_real;
     
     public realisateur() {}
+    
+    public int getId_real()
+    {
+    	return this.id_real;
+    }
+    
+    public void setId_real(int id)
+    {
+    	this.id_real = id;
+    }
     
     public String getnom_real()
     {
@@ -35,10 +46,9 @@ public class realisateur {
     
     @Override
     public String toString() {
-        return "Real{" +
-               "nomReal='" + nom_real + '\'' +
-               ", prenomReal='" + prenom_real + '\'' +
-               '}';
+        return "nomReal='" + nom_real + '\'' +
+               ", prenomReal='" + prenom_real + '\'';
+               
     }
     
 
