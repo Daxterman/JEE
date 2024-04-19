@@ -91,13 +91,11 @@ public class film {
 	
 	@Override
 	public String toString() {
-	    return "Film{" +
-	           "id=" + id_film +
-	           ", titre='" + titre + '\'' +
+	    return "Titre='" + titre + '\'' +
 	           ", anneeSortie=" + annee_sortie +
 	           ", genre=" + genre.getnom_genre() +
-	           ", real=" + real.getnom_real() +
-	           '}';
+	           ", real=" + real.getnom_real();
+	           
 	}
 	
 	
